@@ -14,21 +14,27 @@ public class grafo {
 
     public grafo() {
         this.indice = 1;
+        nodos = new ArrayList<>();
+        aristas = new ArrayList<>();
     }
     
-    public void agregarNodo(int x, int y){
+    public int agregarNodo(int x, int y){
         nodo nuevoNodo = new nodo(indice, x, y);
         indice++;
         nodos.add(nuevoNodo);
+        return nuevoNodo.getValor();
     }
     
     public boolean crearArista(nodo nodoOrigen, nodo nodoDestino){
-        if(nodoOrigen==null || nodoDestino==null) return false;
+        if(nodoOrigen==null || nodoDestino==null || nodoOrigen==nodoDestino) return false;
         if(!aristaValida(nodoOrigen, nodoDestino, aristas.size()-1)) return false;
         
         arista nuevaArista = new arista(nodoOrigen, nodoDestino);
-        nodoOrigen.setGrados(nodoOrigen.getGrados()+1);
-        nodoDestino.setGrados(nodoDestino.getGrados()+1);
+        nodoOrigen.setGrados(nodoOrigen.getGrados()+1); //De este me interesa el que sale [1]
+        nodoOrigen.setDescripcionGrados(1, 1, String.valueOf(Integer.parseInt(nodoOrigen.getDescripcionGrados(1, 1))+1));
+        
+        nodoDestino.setGrados(nodoDestino.getGrados()+1);//De este me interesa el que entra [0]
+        nodoDestino.setDescripcionGrados(0, 1, String.valueOf(Integer.parseInt(nodoDestino.getDescripcionGrados(0, 1))+1));
         
         aristas.add(nuevaArista);
         actualizarTotalGrados();
@@ -55,6 +61,10 @@ public class grafo {
         totalGrados = aux;
     }
 
+    public nodo getNodoEnLista(int i) {
+        return (!nodos.isEmpty() && i<nodos.size() && i>=0) ? nodos.get(i) : null;
+    }
+
     public ArrayList<nodo> getNodos() {
         return nodos;
     }
@@ -69,6 +79,13 @@ public class grafo {
 
     public int getIndice() {
         return indice;
+    }
+    
+    public nodo getNodo(int id, int i){
+        if(i<0) return null;
+        return (id == nodos.get(i).getValor()) 
+                ? nodos.get(i)
+                : getNodo(id, i-1);
     }
     
     
