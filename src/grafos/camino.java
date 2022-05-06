@@ -58,7 +58,7 @@ public class camino {
 
             while(!terminado){
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, sendero);
+                aux = grafo.getAristasByNodo(finalAux, sendero, false);
                 if(aux!=null && aux!=comienzo){
                     sendero.add(aux);
                 }
@@ -86,7 +86,7 @@ public class camino {
 
             while(!terminado){
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, trayectoria);
+                aux = grafo.getAristasByNodo(finalAux, trayectoria, true);
                 if(aux!=null && aux!=comienzo){
                     trayectoria.add(aux);
                 }

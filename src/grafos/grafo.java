@@ -88,12 +88,15 @@ public class grafo {
                 : getNodo(id, i-1);
     }
     
-    public arista getAristasByNodo(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas){
+    public arista getAristasByNodo(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas, boolean haciendoTrayecto){
         arista aristaEncontrada = null;
         for(int i=0; i<aristas.size(); i++){
             if(aristas.get(i).getNodoOrigen()==nodoOrigen){
                 boolean flag = aristasIgnoradas.contains(aristas.get(i));
                 if(flag==false){
+                    aristaEncontrada=aristas.get(i);
+                    break;
+                }else if(flag==true && haciendoTrayecto==true && aristasIgnoradas.get(0) == aristas.get(i)){
                     aristaEncontrada=aristas.get(i);
                     break;
                 }
