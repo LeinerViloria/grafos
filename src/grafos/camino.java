@@ -113,8 +113,4 @@ public class camino {
         }
     }
     
-    public void obtenerUnaArista(nodo nodoOrigen){
-        
-    }
-    
 }

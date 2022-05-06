@@ -93,10 +93,10 @@ public class grafo {
         for(int i=0; i<aristas.size(); i++){
             if(aristas.get(i).getNodoOrigen()==nodoOrigen){
                 boolean flag = aristasIgnoradas.contains(aristas.get(i));
-                if(flag==false){
+                if(!flag){
                     aristaEncontrada=aristas.get(i);
                     break;
-                }else if(flag==true && haciendoTrayecto==true && aristasIgnoradas.get(0) == aristas.get(i)){
+                }else if(flag && haciendoTrayecto && aristasIgnoradas.get(0) == aristas.get(i)){
                     aristaEncontrada=aristas.get(i);
                     break;
                 }
