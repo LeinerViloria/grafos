@@ -1,17 +1,51 @@
 package main;
 
+import grafos.arista;
+import grafos.camino;
 import grafos.grafo;
 import grafos.nodo;
+import java.util.Iterator;
 import javax.swing.JOptionPane;
 
 public class index extends javax.swing.JFrame {
 
     private grafo grafo;
+    private camino camino;
     private int indice;
     public index() {
         indice=0;
         grafo = new grafo();
+        camino = new camino(grafo);
         initComponents();
+    }
+    
+    private String ingresandoValorNodo(){
+        return JOptionPane.showInputDialog("Ingrese el valor del nodo");
+    }
+    
+    private nodo buscarNodo(String valorNodo){
+        nodo resultado = null;
+        try {
+            int i = Integer.parseInt(valorNodo);
+            resultado = grafo.getNodo(i, grafo.getNodos().size()-1);
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error: "+e);
+        }
+        return resultado;
+    }
+    
+    private nodo obtenerNodo(){
+        return grafo.getNodoEnLista(indice);
+    }
+    
+    private void mostrandoInformacion(nodo aux){
+        if(aux!=null){
+            valorNodo.setText(String.valueOf(aux.getValor()));
+            gradosNodo.setText(String.valueOf(aux.getGrados()));
+            gradosEntrada.setText(aux.getDescripcionGrados(0, 1));
+            gradosSalida.setText(aux.getDescripcionGrados(1, 1));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -20,8 +54,8 @@ public class index extends javax.swing.JFrame {
 
         agregarNodo = new javax.swing.JButton();
         crearArista = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        construirTrayectoria = new javax.swing.JButton();
+        contruirSendero = new javax.swing.JButton();
         mostrarInformacion = new javax.swing.JButton();
         limpiar = new javax.swing.JButton();
         tablero = new javax.swing.JPanel();
@@ -57,9 +91,19 @@ public class index extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Mostrar una trayectoria");
+        construirTrayectoria.setText("Mostrar una trayectoria");
+        construirTrayectoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                construirTrayectoriaActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Mostrar un sendero");
+        contruirSendero.setText("Mostrar un sendero");
+        contruirSendero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contruirSenderoActionPerformed(evt);
+            }
+        });
 
         mostrarInformacion.setText("Mostrar informacion");
         mostrarInformacion.addActionListener(new java.awt.event.ActionListener() {
@@ -203,12 +247,12 @@ public class index extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(construirTrayectoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(agregarNodo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(contruirSendero, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(crearArista, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -227,12 +271,12 @@ public class index extends javax.swing.JFrame {
                             .addComponent(mostrarInformacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(construirTrayectoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(limpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(crearArista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(contruirSendero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tablero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -277,25 +321,9 @@ public class index extends javax.swing.JFrame {
     private void agregarNodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarNodoActionPerformed
         int x = 0;
         int y = 0;
-        int indice = grafo.agregarNodo(x, y);
-        JOptionPane.showMessageDialog(null, "El nuevo nodo se identifica con el "+indice);
+        int i = grafo.agregarNodo(x, y);
+        JOptionPane.showMessageDialog(null, "El nuevo nodo se identifica con el "+i);
     }//GEN-LAST:event_agregarNodoActionPerformed
-
-    private String ingresandoValorNodo(){
-        return JOptionPane.showInputDialog("Ingrese el valor del nodo");
-    }
-    
-    private nodo buscarNodo(String valorNodo){
-        nodo resultado = null;
-        try {
-            int i = Integer.parseInt(valorNodo);
-            resultado = grafo.getNodo(i, grafo.getNodos().size()-1);
-            
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Error: "+e);
-        }
-        return resultado;
-    }
     
     private void crearAristaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearAristaActionPerformed
         nodo nodoOrigen = buscarNodo(ingresandoValorNodo());
@@ -307,19 +335,6 @@ public class index extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se creo la arista");
         }
     }//GEN-LAST:event_crearAristaActionPerformed
-
-    private nodo obtenerNodo(){
-        return grafo.getNodoEnLista(indice);
-    }
-    
-    private void mostrandoInformacion(nodo aux){
-        if(aux!=null){
-            valorNodo.setText(String.valueOf(aux.getValor()));
-            gradosNodo.setText(String.valueOf(aux.getGrados()));
-            gradosEntrada.setText(aux.getDescripcionGrados(0, 1));
-            gradosSalida.setText(aux.getDescripcionGrados(1, 1));
-        }
-    }
     
     private void mostrarInformacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarInformacionActionPerformed
         indice = 0;
@@ -383,6 +398,32 @@ public class index extends javax.swing.JFrame {
         gradosSalida.setText("");
     }//GEN-LAST:event_limpiarActionPerformed
 
+    private void contruirSenderoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contruirSenderoActionPerformed
+        camino.construirSendero();
+        if(camino.getSendero().isEmpty()){
+            JOptionPane.showMessageDialog(null, "No se encontro un sendero");
+        }else{
+            String sendero = "";
+            for (arista arista : camino.getSendero()) {
+                sendero+=arista.getNodoOrigen().getValor()+" - "+arista.getNodoDestino().getValor()+"\n";
+            }
+            JOptionPane.showMessageDialog(null, "El sendero encontrado es \n"+sendero);
+        }
+    }//GEN-LAST:event_contruirSenderoActionPerformed
+
+    private void construirTrayectoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_construirTrayectoriaActionPerformed
+        camino.construirTrayectoria();
+        if(camino.getTrayectoria().isEmpty()){
+            JOptionPane.showMessageDialog(null, "No se encontro una trayectoria");
+        }else{
+            String trayectoria = "";
+            for(arista arista:camino.getTrayectoria()){
+                trayectoria+=arista.getNodoOrigen().getValor()+" - "+arista.getNodoDestino().getValor()+"\n";
+            }
+            JOptionPane.showMessageDialog(null, "La trayectoria encontrada es \n"+trayectoria);
+        }
+    }//GEN-LAST:event_construirTrayectoriaActionPerformed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -394,12 +435,12 @@ public class index extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarNodo;
     private javax.swing.JButton avanzar;
+    private javax.swing.JButton construirTrayectoria;
+    private javax.swing.JButton contruirSendero;
     private javax.swing.JButton crearArista;
     private javax.swing.JTextField gradosEntrada;
     private javax.swing.JTextField gradosNodo;
     private javax.swing.JTextField gradosSalida;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

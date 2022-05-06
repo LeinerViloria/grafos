@@ -88,6 +88,19 @@ public class grafo {
                 : getNodo(id, i-1);
     }
     
+    public arista getAristasByNodo(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas){
+        arista aristaEncontrada = null;
+        for(int i=0; i<aristas.size(); i++){
+            if(aristas.get(i).getNodoOrigen()==nodoOrigen){
+                boolean flag = aristasIgnoradas.contains(aristas.get(i));
+                if(flag==false){
+                    aristaEncontrada=aristas.get(i);
+                    break;
+                }
+            }
+        }
+        return aristaEncontrada;
+    }
     
     
 }
