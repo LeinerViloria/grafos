@@ -2,7 +2,9 @@ package main;
 
 import grafos.arista;
 import grafos.camino;
+import grafos.caminoNoDirigido;
 import grafos.grafo;
+import grafos.grafoNoDirigido;
 import grafos.nodo;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
@@ -14,8 +16,8 @@ public class index extends javax.swing.JFrame {
     private int indice;
     public index() {
         indice=0;
-        grafo = new grafo();
-        camino = new camino(grafo);
+        grafo = new grafoNoDirigido();
+        camino = new caminoNoDirigido(grafo);
         initComponents();
     }
     
@@ -52,6 +54,7 @@ public class index extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         agregarNodo = new javax.swing.JButton();
         crearArista = new javax.swing.JButton();
         construirTrayectoria = new javax.swing.JButton();
@@ -72,6 +75,8 @@ public class index extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         gradosSalida = new javax.swing.JTextField();
+        dirigidoRadioButton = new javax.swing.JRadioButton();
+        noDirigidoRadioButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
@@ -193,6 +198,12 @@ public class index extends javax.swing.JFrame {
         gradosSalida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         gradosSalida.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
+        buttonGroup1.add(dirigidoRadioButton);
+        dirigidoRadioButton.setText("Dirigido");
+
+        buttonGroup1.add(noDirigidoRadioButton);
+        noDirigidoRadioButton.setText("No dirigido");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -245,7 +256,11 @@ public class index extends javax.swing.JFrame {
                                 .addComponent(totalGrafos, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dirigidoRadioButton)
+                    .addComponent(noDirigidoRadioButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(construirTrayectoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(agregarNodo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -268,11 +283,13 @@ public class index extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(agregarNodo)
-                            .addComponent(mostrarInformacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(mostrarInformacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dirigidoRadioButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(construirTrayectoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(limpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(limpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(noDirigidoRadioButton)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(crearArista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -388,7 +405,7 @@ public class index extends javax.swing.JFrame {
     }//GEN-LAST:event_regresarActionPerformed
 
     private void limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarActionPerformed
-        grafo = new grafo();
+        grafo = new grafoNoDirigido();
         totalGrafos.setText("");
         avanzar.setEnabled(false);
         regresar.setEnabled(false);
@@ -404,10 +421,11 @@ public class index extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se encontro un sendero");
         }else{
             String sendero = "";
+            int longitud = camino.getLongitudSendero();
             for (arista arista : camino.getSendero()) {
                 sendero+=arista.getNodoOrigen().getValor()+" - "+arista.getNodoDestino().getValor()+"\n";
             }
-            JOptionPane.showMessageDialog(null, "El sendero encontrado es \n"+sendero);
+            JOptionPane.showMessageDialog(null, "El sendero encontrado, con una longitud de "+longitud+", es \n"+sendero);
         }
     }//GEN-LAST:event_contruirSenderoActionPerformed
 
@@ -417,10 +435,11 @@ public class index extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No se encontro una trayectoria");
         }else{
             String trayectoria = "";
+            int longitud = camino.getLongitudTrayectoria();
             for(arista arista:camino.getTrayectoria()){
                 trayectoria+=arista.getNodoOrigen().getValor()+" - "+arista.getNodoDestino().getValor()+"\n";
             }
-            JOptionPane.showMessageDialog(null, "La trayectoria encontrada es \n"+trayectoria);
+            JOptionPane.showMessageDialog(null, "La trayectoria encontrada, con una longitud de "+longitud+", es \n"+trayectoria);
         }
     }//GEN-LAST:event_construirTrayectoriaActionPerformed
 
@@ -435,9 +454,11 @@ public class index extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarNodo;
     private javax.swing.JButton avanzar;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton construirTrayectoria;
     private javax.swing.JButton contruirSendero;
     private javax.swing.JButton crearArista;
+    private javax.swing.JRadioButton dirigidoRadioButton;
     private javax.swing.JTextField gradosEntrada;
     private javax.swing.JTextField gradosNodo;
     private javax.swing.JTextField gradosSalida;
@@ -449,6 +470,7 @@ public class index extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JButton limpiar;
     private javax.swing.JButton mostrarInformacion;
+    private javax.swing.JRadioButton noDirigidoRadioButton;
     private javax.swing.JButton regresar;
     private javax.swing.JPanel tablero;
     private javax.swing.JTextField totalGrafos;
