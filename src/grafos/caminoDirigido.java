@@ -1,14 +1,12 @@
 package grafos;
 
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-public class caminoNoDirigido extends camino{
+public class caminoDirigido extends camino{
     
-    public caminoNoDirigido(grafo grafo) {
+    public caminoDirigido(grafo grafo) {
         super(grafo);
     }
-    
     @Override
     public void construirSendero(){
         nuevoSendero();
@@ -20,20 +18,9 @@ public class caminoNoDirigido extends camino{
             sendero.add(aux);
             boolean terminado = false;
 
-            grafoNoDirigido grafoAux = new grafoNoDirigido();
-            grafoAux.aristas = grafo.getAristas();
-            
-            ArrayList<arista> aristasIgnoradas = new ArrayList<>();
-            
             while(!terminado){
-                
-                arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
-                aristasIgnoradas.add(aux);
-                aristasIgnoradas.add(aristaIgnorada);
-            
                 nodo finalAux = aux.getNodoDestino();
-                
-                aux = grafo.getAristasByNodo(finalAux, aristasIgnoradas, false);
+                aux = grafo.getAristasByNodo(finalAux, sendero, false);
                 if(aux!=null && aux!=comienzo){
                     sendero.add(aux);
                 }
@@ -45,7 +32,6 @@ public class caminoNoDirigido extends camino{
                 }else{
                     break;
                 }
-                aristasIgnoradas.clear();
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
@@ -60,21 +46,10 @@ public class caminoNoDirigido extends camino{
             arista comienzo = aux;
             trayectoria.add(aux);
             boolean terminado = false;
-            
-            grafoNoDirigido grafoAux = new grafoNoDirigido();
-            grafoAux.aristas = grafo.getAristas();
-            
-            ArrayList<arista> aristasIgnoradas = new ArrayList<>();
 
             while(!terminado){
-                
-                arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
-                aristasIgnoradas.add(aux);
-                aristasIgnoradas.add(aristaIgnorada);
-                
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, aristasIgnoradas, true);
-                
+                aux = grafo.getAristasByNodo(finalAux, trayectoria, true);
                 if(aux!=null && aux!=comienzo){
                     trayectoria.add(aux);
                 }

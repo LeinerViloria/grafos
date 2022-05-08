@@ -2,36 +2,32 @@ package grafos;
 
 import java.util.ArrayList;
 
-public class grafoNoDirigido extends grafo {
-    
+public class grafoDirigido extends grafo {
     
     @Override
     public boolean crearArista(nodo nodoOrigen, nodo nodoDestino){
         if(nodoOrigen==null || nodoDestino==null || nodoOrigen==nodoDestino) return false;
         if(!aristaValida(nodoOrigen, nodoDestino, aristas.size()-1)) return false;
         
-        agregandoArista(nodoOrigen, nodoDestino);
-        agregandoArista(nodoDestino, nodoOrigen);
-        
-        actualizarTotalGrados();
-        
-        return true;
-    }
-    
-    private void agregandoArista(nodo nodoOrigen, nodo nodoDestino){
         arista nuevaArista = new arista(nodoOrigen, nodoDestino);
         nodoOrigen.setGrados(nodoOrigen.getGrados()+1); //De este me interesa el que sale [1]
         nodoOrigen.setDescripcionGrados(1, 1, String.valueOf(Integer.parseInt(nodoOrigen.getDescripcionGrados(1, 1))+1));
         
         nodoDestino.setGrados(nodoDestino.getGrados()+1);//De este me interesa el que entra [0]
         nodoDestino.setDescripcionGrados(0, 1, String.valueOf(Integer.parseInt(nodoDestino.getDescripcionGrados(0, 1))+1));
+        
         aristas.add(nuevaArista);
+        actualizarTotalGrados();
+        
+        return true;
     }
     
     @Override
     protected boolean aristaValida(nodo nodoOrigen, nodo nodoDestino, int n){
         if(n<0) return true;
-        return (((aristas.get(n).getNodoOrigen()==nodoOrigen) && (aristas.get(n).getNodoDestino()==nodoDestino)))
+        return (((aristas.get(n).getNodoOrigen()==nodoOrigen) && (aristas.get(n).getNodoDestino()==nodoDestino))
+                ||
+                ((aristas.get(n).getNodoOrigen()==nodoDestino) && (aristas.get(n).getNodoDestino()==nodoOrigen)))
                 ? false
                 : aristaValida(nodoOrigen, nodoDestino, n-1);
         
@@ -53,21 +49,6 @@ public class grafoNoDirigido extends grafo {
             }
         }
         return aristaEncontrada;
-    }
-    
-    public arista getAristaInversa(arista aristaOriginal, int n){
-        /*
-        Cuando se guarda una arista, enseguida se guarda la inversa, asi que,
-        la arista para retornar está una posicion delante o una posicion
-        atras
-        */
-        if(n==0) return aristas.get(0);
-        return (aristas.get(n)!=aristaOriginal 
-                && aristas.get(n).getNodoOrigen()==aristaOriginal.getNodoDestino() 
-                && aristas.get(n).getNodoDestino()==aristaOriginal.getNodoOrigen()
-                )
-                ? aristas.get(n)
-                : getAristaInversa(aristaOriginal, n-1);
     }
     
 }

@@ -3,9 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/grafos/grafo.java</file>
-            <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/grafos/camino.java</file>
-            <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/grafos/nodo.java</file>
+            <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/grafos/caminoNoDirigido.java</file>
             <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/grafos/grafoNoDirigido.java</file>
             <file>file:/C:/Users/lvilora/Documents/app/appListaEnlazadaSimple-main/grafos/src/main/index.java</file>
         </group>

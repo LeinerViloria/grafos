@@ -13,6 +13,7 @@ public abstract class camino {
             Todo camino elemental puede ser uno simple, pero no inversamente.
     */
     protected ArrayList<arista> trayectoria;
+    ArrayList<arista> trayectoriasHechas;
     protected ArrayList<arista> sendero;
     protected int indiceAristaInicialEnTrayectoria;
     protected int indiceAristaInicialEnSendero;
@@ -23,6 +24,7 @@ public abstract class camino {
         this.indiceAristaInicialEnSendero=0;
         nuevoTrayecto();
         nuevoSendero();
+        this.trayectoriasHechas = new ArrayList<>();
     }
     
     protected final void nuevoSendero(){
@@ -56,5 +58,9 @@ public abstract class camino {
     public abstract void construirSendero();
             
     public abstract void construirTrayectoria();
+    
+    public void limpiarTrayectoriasHechas(){
+        trayectoriasHechas.clear();
+    }
     
 }
