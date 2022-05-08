@@ -65,7 +65,9 @@ public abstract class grafo {
                 : getNodo(id, i-1);
     }
     
-    public abstract arista getAristasByNodo(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas, boolean haciendoTrayecto);
+    public abstract arista getAristasByNodoForSendero(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas);
+    
+    public abstract arista getAristasByNodoForTrayecto(nodo nodoOrigen, ArrayList<arista> trayectoArmado, ArrayList<arista> aristasIgnoradas);
     
     
 }

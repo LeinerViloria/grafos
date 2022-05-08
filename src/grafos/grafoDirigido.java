@@ -34,7 +34,7 @@ public class grafoDirigido extends grafo {
     }
     
     @Override
-    public arista getAristasByNodo(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas, boolean haciendoTrayecto){
+    public arista getAristasByNodoForSendero(nodo nodoOrigen, ArrayList<arista> aristasIgnoradas){
         arista aristaEncontrada = null;
         for(int i=0; i<aristas.size(); i++){
             if(aristas.get(i).getNodoOrigen()==nodoOrigen){
@@ -42,7 +42,24 @@ public class grafoDirigido extends grafo {
                 if(!flag){
                     aristaEncontrada=aristas.get(i);
                     break;
-                }else if(flag && haciendoTrayecto && aristasIgnoradas.get(0) == aristas.get(i)){
+                }
+            }
+        }
+        return aristaEncontrada;
+    }
+    
+    @Override
+    public arista getAristasByNodoForTrayecto(nodo nodoOrigen, ArrayList<arista> trayectoArmado, ArrayList<arista> aristasIgnoradas){
+        arista aristaEncontrada = null;
+        for(int i=0; i<aristas.size(); i++){
+            if(aristas.get(i).getNodoOrigen()==nodoOrigen){
+                boolean flag = trayectoArmado.contains(aristas.get(i));
+                boolean esIgnorada = aristasIgnoradas.contains(aristas.get(i));
+                
+                if(!flag && !esIgnorada){
+                    aristaEncontrada=aristas.get(i);
+                    break;
+                }else if(flag && trayectoArmado.get(0) == aristas.get(i)){
                     aristaEncontrada=aristas.get(i);
                     break;
                 }

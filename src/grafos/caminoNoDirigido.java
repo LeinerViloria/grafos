@@ -33,7 +33,7 @@ public class caminoNoDirigido extends camino{
             
                 nodo finalAux = aux.getNodoDestino();
                 
-                aux = grafo.getAristasByNodo(finalAux, aristasIgnoradas, false);
+                aux = grafo.getAristasByNodoForSendero(finalAux, aristasIgnoradas);
                 if(aux!=null && aux!=comienzo){
                     sendero.add(aux);
                 }
@@ -73,7 +73,7 @@ public class caminoNoDirigido extends camino{
                 aristasIgnoradas.add(aristaIgnorada);
                 
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, aristasIgnoradas, true);
+                aux = grafo.getAristasByNodoForTrayecto(finalAux, null, aristasIgnoradas);
                 
                 if(aux!=null && aux!=comienzo){
                     trayectoria.add(aux);

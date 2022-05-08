@@ -1,5 +1,6 @@
 package grafos;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class caminoDirigido extends camino{
@@ -20,7 +21,7 @@ public class caminoDirigido extends camino{
 
             while(!terminado){
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, sendero, false);
+                aux = grafo.getAristasByNodoForSendero(finalAux, sendero);
                 if(aux!=null && aux!=comienzo){
                     sendero.add(aux);
                 }
@@ -46,15 +47,22 @@ public class caminoDirigido extends camino{
             arista comienzo = aux;
             trayectoria.add(aux);
             boolean terminado = false;
+            
+            ArrayList<arista> aristasIgnoradas  = new ArrayList<>();
 
             while(!terminado){
                 nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodo(finalAux, trayectoria, true);
+                aux = grafo.getAristasByNodoForTrayecto(finalAux, trayectoria, aristasIgnoradas);
                 if(aux!=null && aux!=comienzo){
-                    trayectoria.add(aux);
+                    if(grafo.getAristasByNodoForTrayecto(aux.getNodoDestino(), trayectoria, aristasIgnoradas)==null){
+                        aristasIgnoradas.add(aux);
+                        aux = trayectoria.get(trayectoria.size()-1);
+                    }else{
+                        trayectoria.add(aux);
+                    }
                 }
                 if(aux!=null){
-                    if(aux==comienzo){
+                    if(aux==comienzo && trayectoria.size()>1){
                         terminado = true;
                     }
                 }else{
@@ -63,27 +71,27 @@ public class caminoDirigido extends camino{
             }
 
             if(!terminado){
-                trayectoria.clear();
-                indiceAristaInicialEnTrayectoria++;
-                if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
-                    construirTrayectoria();
-                }else{
-                    indiceAristaInicialEnTrayectoria=0;
-                }
+                validaSiDebeRebuscar();
             }else{
                 boolean trayectoRealizado = trayectoriasHechas.contains(comienzo);
                 if(trayectoRealizado){
-                    trayectoria.clear();
-                    indiceAristaInicialEnTrayectoria++;
-                    if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
-                        construirTrayectoria();
-                    }
+                    validaSiDebeRebuscar();
                 }else{
                     trayectoriasHechas.add(comienzo);
                 }
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
+        }
+    }
+    
+    private void validaSiDebeRebuscar(){
+        trayectoria.clear();
+        indiceAristaInicialEnTrayectoria++;
+        if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
+            construirTrayectoria();
+        }else{
+            indiceAristaInicialEnTrayectoria=0;
         }
     }
 }
