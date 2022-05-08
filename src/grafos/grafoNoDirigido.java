@@ -57,11 +57,13 @@ public class grafoNoDirigido extends grafo {
         arista aristaEncontrada = null;
         for(int i=0; i<aristas.size(); i++){
             if(aristas.get(i).getNodoOrigen()==nodoOrigen){
-                boolean flag = aristasIgnoradas.contains(aristas.get(i));
-                if(!flag){
+                boolean flag = trayectoArmado.contains(aristas.get(i));
+                boolean esIgnorada = aristasIgnoradas.contains(aristas.get(i));
+                
+                if(!flag && !esIgnorada){
                     aristaEncontrada=aristas.get(i);
                     break;
-                }else if(flag && aristasIgnoradas.get(0) == aristas.get(i)){
+                }else if(flag && trayectoArmado.get(0) == aristas.get(i)){
                     aristaEncontrada=aristas.get(i);
                     break;
                 }

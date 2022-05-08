@@ -25,27 +25,31 @@ public class caminoNoDirigido extends camino{
             
             ArrayList<arista> aristasIgnoradas = new ArrayList<>();
             
-            while(!terminado){
+            try {
+                while(!terminado){
                 
-                arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
-                aristasIgnoradas.add(aux);
-                aristasIgnoradas.add(aristaIgnorada);
-            
-                nodo finalAux = aux.getNodoDestino();
-                
-                aux = grafo.getAristasByNodoForSendero(finalAux, aristasIgnoradas);
-                if(aux!=null && aux!=comienzo){
-                    sendero.add(aux);
-                }
+                    arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
+                    aristasIgnoradas.add(aux);
+                    aristasIgnoradas.add(aristaIgnorada);
 
-                if(aux!=null){
-                    if(aux==comienzo || aux.getNodoDestino()==comienzo.getNodoOrigen()){
-                        terminado = true;
+                    nodo finalAux = aux.getNodoDestino();
+
+                    aux = grafo.getAristasByNodoForSendero(finalAux, aristasIgnoradas);
+                    if(aux!=null && aux!=comienzo){
+                        sendero.add(aux);
                     }
-                }else{
-                    break;
+
+                    if(aux!=null){
+                        if(aux==comienzo || aux.getNodoDestino()==comienzo.getNodoOrigen()){
+                            terminado = true;
+                        }
+                    }else{
+                        break;
+                    }
+                    aristasIgnoradas.clear();
                 }
-                aristasIgnoradas.clear();
+            } catch (OutOfMemoryError e) {
+                JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
@@ -64,51 +68,60 @@ public class caminoNoDirigido extends camino{
             grafoNoDirigido grafoAux = new grafoNoDirigido();
             grafoAux.aristas = grafo.getAristas();
             
+            ArrayList<arista> trayectoArmado = new ArrayList<>();
             ArrayList<arista> aristasIgnoradas = new ArrayList<>();
 
-            while(!terminado){
-                
-                arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
-                aristasIgnoradas.add(aux);
-                aristasIgnoradas.add(aristaIgnorada);
-                
-                nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodoForTrayecto(finalAux, null, aristasIgnoradas);
-                
-                if(aux!=null && aux!=comienzo){
-                    trayectoria.add(aux);
-                }
-                if(aux!=null){
-                    if(aux==comienzo){
-                        terminado = true;
+            try {
+                while(!terminado){
+                    arista aristaIgnorada = grafoAux.getAristaInversa(aux, grafo.getAristas().size()-1);
+                    trayectoArmado.add(aux);
+                    trayectoArmado.add(aristaIgnorada);
+
+                    nodo finalAux = aux.getNodoDestino();
+                    aux = grafo.getAristasByNodoForTrayecto(finalAux, trayectoArmado, aristasIgnoradas);
+
+                    if(aux!=null && aux!=comienzo){
+                        if(grafo.getAristasByNodoForTrayecto(aux.getNodoDestino(), trayectoArmado, aristasIgnoradas)==null){
+                            aristasIgnoradas.add(aux);
+                            aux = trayectoria.get(trayectoria.size()-1);
+                        }else{
+                            trayectoria.add(aux);
+                        }
                     }
-                }else{
-                    break;
+                    if(aux!=null){
+                        if(aux==comienzo){
+                            terminado = true;
+                        }
+                    }else{
+                        break;
+                    }
                 }
+            } catch (OutOfMemoryError e) {
+                JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
             }
 
             if(!terminado){
-                trayectoria.clear();
-                indiceAristaInicialEnTrayectoria++;
-                if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
-                    construirTrayectoria();
-                }else{
-                    indiceAristaInicialEnTrayectoria=0;
-                }
+                validaSiDebeRebuscar();
             }else{
                 boolean trayectoRealizado = trayectoriasHechas.contains(comienzo);
                 if(trayectoRealizado){
-                    trayectoria.clear();
-                    indiceAristaInicialEnTrayectoria++;
-                    if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
-                        construirTrayectoria();
-                    }
+                    validaSiDebeRebuscar();
                 }else{
                     trayectoriasHechas.add(comienzo);
                 }
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
+        }
+    }
+    
+    private void validaSiDebeRebuscar(){
+        trayectoria.clear();
+        indiceAristaInicialEnTrayectoria++;
+        if(indiceAristaInicialEnTrayectoria<grafo.getAristas().size()){
+            construirTrayectoria();
+        }else{
+            indiceAristaInicialEnTrayectoria=0;
         }
     }
 }

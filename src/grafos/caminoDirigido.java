@@ -19,20 +19,24 @@ public class caminoDirigido extends camino{
             sendero.add(aux);
             boolean terminado = false;
 
-            while(!terminado){
-                nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodoForSendero(finalAux, sendero);
-                if(aux!=null && aux!=comienzo){
-                    sendero.add(aux);
-                }
-
-                if(aux!=null){
-                    if(aux==comienzo || aux.getNodoDestino()==comienzo.getNodoOrigen()){
-                        terminado = true;
+            try {
+                while(!terminado){
+                    nodo finalAux = aux.getNodoDestino();
+                    aux = grafo.getAristasByNodoForSendero(finalAux, sendero);
+                    if(aux!=null && aux!=comienzo){
+                        sendero.add(aux);
                     }
-                }else{
-                    break;
+
+                    if(aux!=null){
+                        if(aux==comienzo || aux.getNodoDestino()==comienzo.getNodoOrigen()){
+                            terminado = true;
+                        }
+                    }else{
+                        break;
+                    }
                 }
+            } catch (OutOfMemoryError e) {
+                JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
@@ -50,24 +54,28 @@ public class caminoDirigido extends camino{
             
             ArrayList<arista> aristasIgnoradas  = new ArrayList<>();
 
-            while(!terminado){
-                nodo finalAux = aux.getNodoDestino();
-                aux = grafo.getAristasByNodoForTrayecto(finalAux, trayectoria, aristasIgnoradas);
-                if(aux!=null && aux!=comienzo){
-                    if(grafo.getAristasByNodoForTrayecto(aux.getNodoDestino(), trayectoria, aristasIgnoradas)==null){
-                        aristasIgnoradas.add(aux);
-                        aux = trayectoria.get(trayectoria.size()-1);
+            try {
+                while(!terminado){
+                    nodo finalAux = aux.getNodoDestino();
+                    aux = grafo.getAristasByNodoForTrayecto(finalAux, trayectoria, aristasIgnoradas);
+                    if(aux!=null && aux!=comienzo){
+                        if(grafo.getAristasByNodoForTrayecto(aux.getNodoDestino(), trayectoria, aristasIgnoradas)==null){
+                            aristasIgnoradas.add(aux);
+                            aux = trayectoria.get(trayectoria.size()-1);
+                        }else{
+                            trayectoria.add(aux);
+                        }
+                    }
+                    if(aux!=null){
+                        if(aux==comienzo && trayectoria.size()>1){
+                            terminado = true;
+                        }
                     }else{
-                        trayectoria.add(aux);
+                        break;
                     }
                 }
-                if(aux!=null){
-                    if(aux==comienzo && trayectoria.size()>1){
-                        terminado = true;
-                    }
-                }else{
-                    break;
-                }
+            } catch (OutOfMemoryError e) {
+                JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
             }
 
             if(!terminado){
