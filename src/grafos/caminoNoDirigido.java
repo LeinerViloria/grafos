@@ -50,6 +50,7 @@ public class caminoNoDirigido extends camino{
                 }
             } catch (OutOfMemoryError e) {
                 JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
+                System.exit(0);
             }
         }else{
             JOptionPane.showMessageDialog(null, "No hay aristas");
@@ -98,6 +99,7 @@ public class caminoNoDirigido extends camino{
                 }
             } catch (OutOfMemoryError e) {
                 JOptionPane.showMessageDialog(null, "Error en la busqueda, "+e);
+                System.exit(0);
             }
 
             if(!terminado){
